@@ -29,9 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 6.2.0">
+<meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Polaris" type="application/atom+xml">
+
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-<link rel="alternate" href="/atom.xml" title="Polaris" type="application/atom+xml">
 </head>
 
 
@@ -474,8 +474,9 @@
                 <blockquote>
 <p>Ledig C, Theis L, Huszár F, et al. Photo-realistic single image super-resolution using a generative adversarial network[C]//Proceedings of the IEEE conference on computer vision and pattern recognition. 2017: 4681-4690.</p>
 </blockquote>
-<h1 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h1><p>通常有监督的超分辨率算法的优化目标是最小化均方差（MSE），同时，也最大化了图像评价指标峰值信噪比（PSNR）。但是，这种评价指标不利于捕捉感知层面的差异（比如图像的纹理细节等），容易使得到的结果过于平滑，缺少高频信息，导致图片看上去不自然。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/29201475/1656943445570-74d8c7d0-7aad-4021-85c9-e5be062b1263.png#clientId=u8df20da6-2601-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=307&amp;id=u34f090cb&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=452&amp;originWidth=559&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=true&amp;size=398218&amp;status=done&amp;style=none&amp;taskId=ua33787cc-ee78-4953-9ab9-f79606df28e&amp;title=%E5%B7%A6%E5%9B%BE%E5%85%B7%E6%9C%89%E6%9B%B4%E9%AB%98%E7%9A%84PSNR%EF%BC%8C%E4%BD%86%E5%BE%88%E6%98%8E%E6%98%BE%E5%8F%B3%E5%9B%BE%E7%9A%84%E7%BA%B9%E7%90%86%E7%BB%86%E8%8A%82%E6%9B%B4%E6%B8%85%E6%99%B0&amp;width=379.20001220703125" alt="image.png" title="左图具有更高的PSNR，但很明显右图的纹理细节更清晰"></p>
-<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><h2 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/29201475/1657036461228-180bd094-26eb-4fef-a031-4efb51469f23.png#clientId=u9c7fe7a5-36b9-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=281&amp;id=uaeb164e3&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=351&amp;originWidth=1093&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=true&amp;size=160141&amp;status=done&amp;style=none&amp;taskId=u5cb961c6-617f-4cfb-af1a-f697890f1bd&amp;title=%E7%94%9F%E6%88%90%E5%99%A8%E7%BB%93%E6%9E%84&amp;width=874.4" alt="image.png" title="生成器结构"></p>
+<h1 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h1><p>通常有监督的超分辨率算法的优化目标是最小化均方差（MSE），同时，也最大化了图像评价指标峰值信噪比（PSNR）。但是，这种评价指标不利于捕捉感知层面的差异（比如图像的纹理细节等），容易使得到的结果过于平滑，缺少高频信息，导致图片看上去不自然。</p>
+<p><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414j0twcvj30d50amjwk.jpg" alt="image.png" title="左图具有更高的PSNR，但很明显右图的纹理细节更清晰"></p>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><h2 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h2><p><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414m8dagbj30q108dadu.jpg" alt="image.png" title="生成器结构"></p>
 <ol>
 <li>作用：由低分辨率图像生成高分辨率图像</li>
 <li>结构：<ol>
@@ -486,7 +487,7 @@
 </li>
 <li>图片中k代表卷积核尺寸、n代表卷积输出的通道数、s代表步长、箭头表示残差结构、Elementwise Sun是残差中相加的操作</li>
 </ol>
-<h2 id="判别器"><a href="#判别器" class="headerlink" title="判别器"></a>判别器</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/29201475/1657037049976-b71fb996-f3e6-4455-801e-e129591ce0fd.png#clientId=u9c7fe7a5-36b9-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=205&amp;id=u190ad174&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=256&amp;originWidth=1086&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=true&amp;size=242099&amp;status=done&amp;style=none&amp;taskId=uf16b9a7d-4584-48c3-8116-1ea6dcb445f&amp;title=%E5%88%A4%E5%88%AB%E5%99%A8%E7%BB%93%E6%9E%84&amp;width=868.8" alt="image.png" title="判别器结构"></p>
+<h2 id="判别器"><a href="#判别器" class="headerlink" title="判别器"></a>判别器</h2><p><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414msuzb4j30q1065aen.jpg" alt="image.png" title="判别器结构"></p>
 <ol>
 <li>作用：判别图片是真实的HR图片还是生成的HR图片</li>
 <li>输出为判断结果，位于0-1之间，越接近1代表判断为真、越接近0代表判断为假</li>
@@ -507,14 +508,14 @@
 <li><strong>PSNR</strong>和<strong>SSIM</strong>，使用daala包，在中心裁剪的y通道上计算，并且去除4像素的边界；</li>
 <li>提出了一个新的评价标准<strong>平均意见分数（MOS）</strong>：</li>
 </ol>
-<p>由26个评分人对超分辨率图像进行打分，分数由1（最差质量）-5（最好质量），打分的图片是数据集Set5、Set14和BSD100中原始的HR图像以及对应的LR图像通过以下方法得到的SR图像（带<em>的方法没使用BSD100数据集）：最邻近插值（NN）、双二次插值（bicubic）、SRCNN、SelfExSR、DRCN、ESPCN、SRResNet-MSE、SRResNet-VGG22</em>、SRGAN-MSE<em>、SRGAN-VGG22</em>、SRGAN-VGG54。因此，每个评分人分别对1128个实例进行了评估，并在来自 BSD300训练集的20张图像的NN（得分 1）和HR（得分5）图像上进行了校准。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/29201475/1657286886378-9099b8a4-5f9d-46ac-8640-fc294d3807ac.png#clientId=u0fd90306-a78e-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=216&amp;id=u6f899183&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=257&amp;originWidth=596&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=true&amp;size=65701&amp;status=done&amp;style=none&amp;taskId=u9d49937b-6fc7-4b8b-8ccd-6e7bc04fc22&amp;title=BSD100%E4%B8%AD%E5%9B%BE%E7%89%87%E7%9A%84%E6%89%93%E5%88%86%E6%83%85%E5%86%B5%EF%BC%8C%E7%BA%A2%E8%89%B2%E4%B8%BA%E5%B9%B3%E5%9D%87%E5%80%BC&amp;width=501.8000183105469" alt="image.png" title="BSD100中图片的打分情况，红色为平均值"></p>
-<h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><h2 id="感知损失对比"><a href="#感知损失对比" class="headerlink" title="感知损失对比"></a>感知损失对比</h2><p>使用不同的感知损失在Set5和Set14两个数据集上进行测试：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/29201475/1657288612570-3a4e7652-34ab-41e0-a57e-c1c9238cdbac.png#clientId=u0fd90306-a78e-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=237&amp;id=u30cff921&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=296&amp;originWidth=567&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=true&amp;size=74155&amp;status=done&amp;style=none&amp;taskId=uef28a3e9-cef6-4829-b9c5-d06670d4cc2&amp;title=%E6%84%9F%E7%9F%A5%E6%8D%9F%E5%A4%B1%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C%EF%BC%881%EF%BC%89&amp;width=453.6" alt="image.png" title="感知损失对比实验结果（1）"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/29201475/1657289021085-552d83aa-f8f1-484f-ad47-67ac295d75d4.png#clientId=u0fd90306-a78e-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=414&amp;id=uacdcce77&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=518&amp;originWidth=1119&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=true&amp;size=741773&amp;status=done&amp;style=none&amp;taskId=ua820179c-8508-4799-8438-72b1c0983b7&amp;title=%E6%84%9F%E7%9F%A5%E6%8D%9F%E5%A4%B1%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C%EF%BC%882%EF%BC%89&amp;width=895.2" alt="image.png" title="感知损失对比实验结果（2）"></p>
+<p>由26个评分人对超分辨率图像进行打分，分数由1（最差质量）-5（最好质量），打分的图片是数据集Set5、Set14和BSD100中原始的HR图像以及对应的LR图像通过以下方法得到的SR图像（带<em>的方法没使用BSD100数据集）：最邻近插值（NN）、双二次插值（bicubic）、SRCNN、SelfExSR、DRCN、ESPCN、SRResNet-MSE、SRResNet-VGG22</em>、SRGAN-MSE<em>、SRGAN-VGG22</em>、SRGAN-VGG54。因此，每个评分人分别对1128个实例进行了评估，并在来自 BSD300训练集的20张图像的NN（得分 1）和HR（得分5）图像上进行了校准。<br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414n8qtrpj30gk075dh3.jpg" alt="image.png" title="BSD100中图片的打分情况，红色为平均值"></p>
+<h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><h2 id="感知损失对比"><a href="#感知损失对比" class="headerlink" title="感知损失对比"></a>感知损失对比</h2><p>使用不同的感知损失在Set5和Set14两个数据集上进行测试：<br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414nno6nnj30fr088abd.jpg" alt="image.png" title="感知损失对比实验结果（1）"><br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414nyibraj30q10c2gxa.jpg" alt="image.png" title="感知损失对比实验结果（2）"></p>
 <ol>
 <li>MSE相对于感知损失具有更高的PSNR和SSIM值，但结果过于平滑，MOS更能反应出真实感觉；</li>
 <li>在Set5上MSE与感知损失差距不大，但在Set14上感知损失的效果明显；</li>
 <li>从图中可以看出，使用VGG更深的网络可以得到更多的纹理细节。</li>
 </ol>
-<h2 id="网络方法对比"><a href="#网络方法对比" class="headerlink" title="网络方法对比"></a>网络方法对比</h2><p>使用SRResNet和SRGAN与其他6种方法进行对比：<br><img src="https://cdn.nlark.com/yuque/0/2022/png/29201475/1657292105385-638f2cab-8bce-45a2-8493-a15eeee7feee.png#clientId=u0fd90306-a78e-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=289&amp;id=u5e974236&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=361&amp;originWidth=928&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=true&amp;size=143219&amp;status=done&amp;style=none&amp;taskId=u2fc5bdff-6634-4878-a6c0-cbf584a5f50&amp;title=%E6%96%B9%E6%B3%95%E5%AF%B9%E6%AF%94%E7%BB%93%E6%9E%9C&amp;width=742.4" alt="image.png" title="方法对比结果"></p>
+<h2 id="网络方法对比"><a href="#网络方法对比" class="headerlink" title="网络方法对比"></a>网络方法对比</h2><p>使用SRResNet和SRGAN与其他6种方法进行对比：<br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414obnek7j30pr0a1acy.jpg" alt="image.png" title="方法对比结果"></p>
 <ol>
 <li>SRResNet在PSNR和SSIM上均取得了更好的结果；</li>
 <li>SRGAN具有卓越的感知性能。</li>
@@ -1092,24 +1093,21 @@
             |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
             <br>
             
-            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数&nbsp;<span
                 class="white-color">1.3k</span>&nbsp;字
             
             
             
             
             
-            
-            <span id="busuanzi_container_site_pv" style='display:none'>
+            <span id="busuanzi_container_site_pv">
                 |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
-                    class="white-color"></span>&nbsp;次
-            </span>
+                    class="white-color"></span>&nbsp;人</span>
             
             
-            <span id="busuanzi_container_site_uv" style='display:none'>
-                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
-                    class="white-color"></span>&nbsp;人
-            </span>
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人</span>
             
             <br>
             
@@ -1146,12 +1144,12 @@
                         diffMinutes * minutes) / seconds);
                     if (startYear == todayYear) {
                         document.getElementById("year").innerHTML = todayYear;
-                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffDays + " 天 " + diffHours +
-                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                        document.getElementById("sitetime").innerHTML = "本站已勉强运行" + diffDays + " 天 " + diffHours +
+                            " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒 ";
                     } else {
                         document.getElementById("year").innerHTML = startYear + " - " + todayYear;
-                        document.getElementById("sitetime").innerHTML = "本站已安全运行 " + diffYears + " 年 " + diffDays +
-                            " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+                        document.getElementById("sitetime").innerHTML = "本站已勉强运行" + diffYears + " 天 " + diffDays +
+                            " 小时 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒 ";
                     }
                 }
                 setInterval(siteTime, 1000);
@@ -1188,26 +1186,6 @@
 </footer>
 
 <div class="progress-bar"></div>
-
-<script>
-    $(document).ready(function () {
-
-        var int = setInterval(fixCount, 50);  // 50ms周期检测函数
-        var pvcountOffset = 80000;  // 初始化首次数据
-        var uvcountOffset = 20000;
-
-        function fixCount() {
-            if (document.getElementById("busuanzi_container_site_pv").style.display != "none") {
-                $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + pvcountOffset);
-                clearInterval(int);
-            }
-            if ($("#busuanzi_container_site_pv").css("display") != "none") {
-                $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + uvcountOffset); // 加上初始数据 
-                clearInterval(int); // 停止检测
-            }
-        }
-    });
-</script>
 
     <!-- 搜索遮罩框 -->
 <div id="searchModal" class="modal">
