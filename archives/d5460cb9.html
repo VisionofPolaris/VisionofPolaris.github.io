@@ -493,7 +493,7 @@
 <li>输出为判断结果，位于0-1之间，越接近1代表判断为真、越接近0代表判断为假</li>
 </ol>
 <h1 id="感知损失函数"><a href="#感知损失函数" class="headerlink" title="感知损失函数"></a>感知损失函数</h1><p>损失函数由判别器损失和生成器损失组成，判别器损失和原始GAN基本一样，生成器损失受感知损失（Perceptual Loss）$l^{SR}$的启发，由两部分组成，即内容损失（Content Loss）和对抗损失（Adversarial Loss）：<br>$$l^{SR}=l_{VGG}^{SR}+10^{-3}l^{SR}_{Gen}$$</p>
-<h2 id="内容损失"><a href="#内容损失" class="headerlink" title="内容损失"></a>内容损失</h2><p>常用的MSE损失函数导致图像缺少高频信息，文章使用VGG损失函数，将生成的HR图像和真实的HR图像送入VGG19网络中的第i个最大池化层前的第j个卷积层之前的网络进行特征提取，然后在提取的特征图上再使用MSE误差：<br>$$l_{VGG/i.j}^{SR} = \frac{1}{W_{i,j}H_{i,j}} \sum_{x=1}^{W_{i,j}} \sum_{y=1}^{H_{i,j}} (\phi_{i,j} ( I^{HR} ) <em>{x,y} - \phi</em>{i,j} ( G_{\theta <em>G} ( I^{HR} ) ) <em>{x,y})^2$$<br>例如：SRGAN-VGG54代表使用的损失函数为$l</em>{VGG/5.4}^{SR}$。假定$\phi</em>{5,4}$是指第五个最大池化前的第四个卷积层之前的网络，即VGG19前16层的网络，其输出用$\phi_{5,4}$(input）表示，输出特征图大小为$W_{i,j} \times H_{i,j} \times C_{i,j}$。</p>
+<h2 id="内容损失"><a href="#内容损失" class="headerlink" title="内容损失"></a>内容损失</h2><p>常用的MSE损失函数导致图像缺少高频信息，文章使用VGG损失函数，将生成的HR图像和真实的HR图像送入VGG19网络中的第i个最大池化层前的第j个卷积层之前的网络进行特征提取，然后在提取的特征图上再使用MSE误差：<br>$$ l_ {VGG/i.j}^ {SR} = \frac{1}{W_ {i,j}H_ {i,j}} \sum_ {x=1}^{W_ {i,j}} \sum_ {y=1}^{H_ {i,j}} (\phi_ {i,j} ( I^{HR} )_ {x,y} - \phi_ {i,j} ( G_ {\theta_ G} ( I^{HR} ) )_ {x, y} )^2 $$<br>例如：SRGAN-VGG54代表使用的损失函数为$l_{VGG/5.4}^{SR}$。假定$\phi_{5,4}$是指第五个最大池化前的第四个卷积层之前的网络，即VGG19前16层的网络，其输出用$\phi_{5,4}$(input）表示，输出特征图大小为$W_{i,j} \times H_{i,j} \times C_{i,j}$。</p>
 <h2 id="对抗损失"><a href="#对抗损失" class="headerlink" title="对抗损失"></a>对抗损失</h2><p>与普通GAN的生成器损失基本一样，其中$D_{\theta_D} (G_{\theta_G}(I^{LR}))$代表生成图像判别为真的概率：<br>$$l_{Gen}^{SR} = \sum_{n=1} ^N - \log D_{\theta_D} (G_{\theta_G}(I^{LR}))$$</p>
 <h1 id="实验设置"><a href="#实验设置" class="headerlink" title="实验设置"></a>实验设置</h1><h2 id="参数设置"><a href="#参数设置" class="headerlink" title="参数设置"></a>参数设置</h2><ol>
 <li>在训练阶段，将HR图像使用bicubic kernel进行下采样和高斯模糊生成LR图片，假设下采样率为r。低分辨率图像大小为$W \times H \times C$，则高分辨率图像为$rW \times rH \times C$。实验中取r为4；</li>
@@ -508,7 +508,7 @@
 <li><strong>PSNR</strong>和<strong>SSIM</strong>，使用daala包，在中心裁剪的y通道上计算，并且去除4像素的边界；</li>
 <li>提出了一个新的评价标准<strong>平均意见分数（MOS）</strong>：</li>
 </ol>
-<p>由26个评分人对超分辨率图像进行打分，分数由1（最差质量）-5（最好质量），打分的图片是数据集Set5、Set14和BSD100中原始的HR图像以及对应的LR图像通过以下方法得到的SR图像（带<em>的方法没使用BSD100数据集）：最邻近插值（NN）、双二次插值（bicubic）、SRCNN、SelfExSR、DRCN、ESPCN、SRResNet-MSE、SRResNet-VGG22</em>、SRGAN-MSE<em>、SRGAN-VGG22</em>、SRGAN-VGG54。因此，每个评分人分别对1128个实例进行了评估，并在来自 BSD300训练集的20张图像的NN（得分 1）和HR（得分5）图像上进行了校准。<br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414n8qtrpj30gk075dh3.jpg" alt="image.png" title="BSD100中图片的打分情况，红色为平均值"></p>
+<p>由26个评分人对超分辨率图像进行打分，分数由1（最差质量）-5（最好质量），打分的图片是数据集Set5、Set14和BSD100中原始的HR图像以及对应的LR图像通过以下方法得到的SR图像（带*的方法没使用BSD100数据集）：最邻近插值（NN）、双二次插值（bicubic）、SRCNN、SelfExSR、DRCN、ESPCN、SRResNet-MSE、SRResNet-VGG22*、SRGAN-MSE*、SRGAN-VGG22*、SRGAN-VGG54。因此，每个评分人分别对1128个实例进行了评估，并在来自 BSD300训练集的20张图像的NN（得分 1）和HR（得分5）图像上进行了校准。<br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414n8qtrpj30gk075dh3.jpg" alt="image.png" title="BSD100中图片的打分情况，红色为平均值"></p>
 <h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><h2 id="感知损失对比"><a href="#感知损失对比" class="headerlink" title="感知损失对比"></a>感知损失对比</h2><p>使用不同的感知损失在Set5和Set14两个数据集上进行测试：<br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414nno6nnj30fr088abd.jpg" alt="image.png" title="感知损失对比实验结果（1）"><br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414nyibraj30q10c2gxa.jpg" alt="image.png" title="感知损失对比实验结果（2）"></p>
 <ol>
 <li>MSE相对于感知损失具有更高的PSNR和SSIM值，但结果过于平滑，MOS更能反应出真实感觉；</li>
