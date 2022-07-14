@@ -508,9 +508,8 @@
 </ol>
 <h2 id="评价标准"><a href="#评价标准" class="headerlink" title="评价标准"></a>评价标准</h2><ol>
 <li><strong>PSNR</strong>和<strong>SSIM</strong>，使用daala包，在中心裁剪的y通道上计算，并且去除4像素的边界；</li>
-<li>提出了一个新的评价标准<strong>平均意见分数（MOS）</strong>：</li>
+<li>提出了一个新的评价标准<strong>平均意见分数（MOS）</strong>：<br>由26个评分人对超分辨率图像进行打分，分数由1（最差质量）-5（最好质量），打分的图片是数据集Set5、Set14和BSD100中原始的HR图像以及对应的LR图像通过以下方法得到的SR图像（带*的方法没使用BSD100数据集）：最邻近插值（NN）、双二次插值（bicubic）、SRCNN、SelfExSR、DRCN、ESPCN、SRResNet-MSE、SRResNet-VGG22*、SRGAN-MSE*、SRGAN-VGG22*、SRGAN-VGG54。因此，每个评分人分别对1128个实例进行了评估，并在来自 BSD300训练集的20张图像的NN（得分 1）和HR（得分5）图像上进行了校准。<br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414n8qtrpj30gk075dh3.jpg" alt="image.png" title="BSD100中图片的打分情况，红色为平均值"></li>
 </ol>
-<p>由26个评分人对超分辨率图像进行打分，分数由1（最差质量）-5（最好质量），打分的图片是数据集Set5、Set14和BSD100中原始的HR图像以及对应的LR图像通过以下方法得到的SR图像（带*的方法没使用BSD100数据集）：最邻近插值（NN）、双二次插值（bicubic）、SRCNN、SelfExSR、DRCN、ESPCN、SRResNet-MSE、SRResNet-VGG22*、SRGAN-MSE*、SRGAN-VGG22*、SRGAN-VGG54。因此，每个评分人分别对1128个实例进行了评估，并在来自 BSD300训练集的20张图像的NN（得分 1）和HR（得分5）图像上进行了校准。<br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414n8qtrpj30gk075dh3.jpg" alt="image.png" title="BSD100中图片的打分情况，红色为平均值"></p>
 <h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><h2 id="感知损失对比"><a href="#感知损失对比" class="headerlink" title="感知损失对比"></a>感知损失对比</h2><p>使用不同的感知损失在Set5和Set14两个数据集上进行测试：<br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414nno6nnj30fr088abd.jpg" alt="image.png" title="感知损失对比实验结果（1）"><br><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h414nyibraj30q10c2gxa.jpg" alt="image.png" title="感知损失对比实验结果（2）"></p>
 <ol>
 <li>MSE相对于感知损失具有更高的PSNR和SSIM值，但结果过于平滑，MOS更能反应出真实感觉；</li>
@@ -767,43 +766,41 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/archives/d5460cb9.html">
+                <a href="/archives/30160142.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="SRGAN">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="SSD代码（一）VOC数据加载">
                         
-                        <span class="card-title">SRGAN</span>
+                        <span class="card-title">SSD代码（一）VOC数据加载</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            SRGAN论文阅读笔记
+                            VOC格式数据加载
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-09
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-07-15
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/" class="post-category">
-                                    文献阅读
+                            <a href="/categories/%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/" class="post-category">
+                                    代码实践
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -811,8 +808,8 @@
                         <span class="chip bg-color">深度学习</span>
                     </a>
                     
-                    <a href="/tags/%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/">
-                        <span class="chip bg-color">超分辨率</span>
+                    <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">
+                        <span class="chip bg-color">目标检测</span>
                     </a>
                     
                 </div>
@@ -1096,7 +1093,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数&nbsp;<span
-                class="white-color">1.3k</span>&nbsp;字
+                class="white-color">2.8k</span>&nbsp;字
             
             
             

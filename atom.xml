@@ -6,7 +6,7 @@
   <link href="http://versionofpolaris.github.io/atom.xml" rel="self"/>
   
   <link href="http://versionofpolaris.github.io/"/>
-  <updated>2022-07-09T17:39:43.873Z</updated>
+  <updated>2022-07-14T18:40:43.479Z</updated>
   <id>http://versionofpolaris.github.io/</id>
   
   <author>
@@ -17,11 +17,38 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>SSD代码（一）VOC数据加载</title>
+    <link href="http://versionofpolaris.github.io/archives/30160142.html"/>
+    <id>http://versionofpolaris.github.io/archives/30160142.html</id>
+    <published>2022-07-14T18:25:21.000Z</published>
+    <updated>2022-07-14T18:40:43.479Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;补充&quot;&gt;&lt;a href=&quot;#补充&quot; class=&quot;headerlink&quot; title=&quot;补充&quot;&gt;&lt;/a&gt;补充&lt;/h1&gt;&lt;h2 id=&quot;voc数据集结构&quot;&gt;&lt;a href=&quot;#voc数据集结构&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="代码实践" scheme="http://versionofpolaris.github.io/categories/%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/"/>
+    
+    
+    <category term="深度学习" scheme="http://versionofpolaris.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="目标检测" scheme="http://versionofpolaris.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/"/>
+    
+  </entry>
+  
+  <entry>
     <title>SRGAN</title>
     <link href="http://versionofpolaris.github.io/archives/d5460cb9.html"/>
     <id>http://versionofpolaris.github.io/archives/d5460cb9.html</id>
     <published>2022-07-09T14:26:39.000Z</published>
-    <updated>2022-07-09T17:39:43.873Z</updated>
+    <updated>2022-07-09T17:41:37.130Z</updated>
     
     
       
