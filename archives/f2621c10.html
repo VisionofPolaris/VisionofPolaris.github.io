@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, 生活 技术 学习">
+    <meta name="keywords" content="SSD（二）IoU实现, 生活 技术 学习">
     <meta name="description" content="一个记录与分享生活、技术、学习的空间">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | Polaris</title>
+    <title>SSD（二）IoU实现 | Polaris</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -282,12 +282,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title">SSD（二）IoU实现</h1>
                 </div>
             </div>
         </div>
@@ -401,12 +401,29 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">深度学习</span>
+                            </a>
+                        
+                            <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">
+                                <span class="chip bg-color">目标检测</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/" class="post-category">
+                                代码实践
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -415,7 +432,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-07-09
+                    2022-07-17
                 </div>
                 
 
@@ -424,14 +441,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    73
+                    569
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -454,19 +471,65 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <h1 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h1><ul>
+<li>输入参数：</li>
+</ul>
+<p>box_a：图片中的GT框信息，维度为[N, 4]，其中N代表GT框的个数，4代表坐标；<br>box_b：图片中的先验框信息，维度为[M, 4]，其中M代表先验框的个数，4代表坐标。</p>
+<ul>
+<li>功能：</li>
+</ul>
+<p>计算交并比：</p>
+<p>$$ IoU= \frac {box _ a \cap box _ b} {box _ a \cup box _ b} $$</p>
+<h1 id="交集面积"><a href="#交集面积" class="headerlink" title="交集面积"></a>交集面积</h1><p><strong>step 1</strong> 求每一个GT框与所有锚框之间左上角横纵坐标的最大值和右下角横纵坐标的最小值</p>
+<p>以左上角为例，分别求两个框左上角横纵坐标的最大值，如图1所示。</p>
+<p><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h4ilxwu1c4j30r00kc0uw.jpg" alt="图1"></p>
+<p>得到的结果应为维度为**[N, M, 2]**的张量，代表的含义是第n个真实框与第m个先验框重叠部分左上角的2个坐标值。代码实现如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">LT <span class="token operator">=</span> torch<span class="token punctuation">.</span><span class="token builtin">max</span><span class="token punctuation">(</span>box_a<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> box_b<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>box_a[:, None, :2]会在axis=1处增加一个为1的维度。torch.max()输入为两个张量时会满足张量运算的<strong>广播机制</strong>[1]，运算过程如下，假设box_a[:, None, :2]为A，box_b[:, :2]为B。</p>
+<ul>
+<li>A沿着y轴复制M份，对应M个先验框（[N, 1, 2]-&gt;[N, M, 2]）；</li>
+<li>B沿着x轴复制N份，对应N个GT框（[M, 2]-&gt;[N, M, 2]）；</li>
+<li>对应位置比较大小。</li>
+</ul>
+<p><img src="http://tva1.sinaimg.cn/large/008cqtC1ly1h4ilz38by5j31450wd0z4.jpg" alt="图2"></p>
+<p><strong>step 2</strong>求重叠部分面积</p>
+<ul>
+<li>当两个矩形框有重叠部分时：右下角坐标-左上角坐标&gt;=0</li>
+<li>当两个矩形框没有重叠时：右下角坐标-左上角坐标&lt;0</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">inters <span class="token operator">=</span> <span class="token punctuation">(</span>inter_lowerrights <span class="token operator">-</span> inter_upperlefts<span class="token punctuation">)</span><span class="token punctuation">.</span>clamp<span class="token punctuation">(</span><span class="token builtin">min</span><span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+inter_areas <span class="token operator">=</span> inters<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> inters<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token comment"># (N, M)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo generate<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo deploy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>torch.clamp()可以将输入张量夹紧到[min, max][2]。</p>
+<h1 id="并集面积"><a href="#并集面积" class="headerlink" title="并集面积"></a>并集面积</h1><p><strong>step 3</strong> 计算box_a和box_b的面积</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">box_area <span class="token operator">=</span> <span class="token keyword">lambda</span> boxes<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">-</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span><span class="token punctuation">(</span>boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">-</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+areas1 <span class="token operator">=</span> box_area<span class="token punctuation">(</span>box_a<span class="token punctuation">)</span> <span class="token comment"># (N,)</span>
+areas2 <span class="token operator">=</span> box_area<span class="token punctuation">(</span>box_b<span class="token punctuation">)</span> <span class="token comment"># (M,)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><strong>step 4</strong> 计算并集面积<br>并集面积 = 先验框面积 + GT面积 - 交集面积，输出应为[N, M]。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">union_areas <span class="token operator">=</span> areas1<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">]</span> <span class="token operator">+</span> areas2 <span class="token operator">-</span> inter_areas<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h1><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">iou</span><span class="token punctuation">(</span>box_a<span class="token punctuation">,</span> box_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    
+    LT <span class="token operator">=</span> torch<span class="token punctuation">.</span><span class="token builtin">max</span><span class="token punctuation">(</span>
+        box_a<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment"># (N, 1, 2)</span>
+        box_b<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span>        <span class="token comment"># (M, 2)</span>
+    <span class="token punctuation">)</span>
+    RB <span class="token operator">=</span> torch<span class="token punctuation">.</span><span class="token builtin">min</span><span class="token punctuation">(</span>
+        box_a<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment"># (N, 1, 2)</span>
+        box_b<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span>        <span class="token comment"># (M, 2)</span>
+    <span class="token punctuation">)</span>
+    
+    inter <span class="token operator">=</span> <span class="token punctuation">(</span>RB <span class="token operator">-</span> LT<span class="token punctuation">)</span><span class="token punctuation">.</span>clamp<span class="token punctuation">(</span><span class="token builtin">min</span><span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token comment">#(N, M, 2)</span>
+    inter_areas <span class="token operator">=</span> inter<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> inter<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>
+    
+    box_area <span class="token operator">=</span> <span class="token keyword">lambda</span> boxes<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">-</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span><span class="token punctuation">(</span>boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">-</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    areas1 <span class="token operator">=</span> box_area<span class="token punctuation">(</span>box_a<span class="token punctuation">)</span> <span class="token comment"># (N,)</span>
+    areas2 <span class="token operator">=</span> box_area<span class="token punctuation">(</span>box_b<span class="token punctuation">)</span> <span class="token comment"># (M,)</span>
+    
+    union_areas <span class="token operator">=</span> areas1<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">]</span> <span class="token operator">+</span> areas2 <span class="token operator">-</span> inter_areas <span class="token comment"># (N, M)</span>
+    
+    <span class="token keyword">return</span> inter_areas<span class="token operator">/</span>union_areas<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1] <a target="_blank" rel="noopener" href="https://blog.csdn.net/u012151283/article/details/54972593">https://blog.csdn.net/u012151283/article/details/54972593</a></p>
+<p>[2] <a target="_blank" rel="noopener" href="https://blog.csdn.net/u013230189/article/details/82627375">https://blog.csdn.net/u013230189/article/details/82627375</a></p>
 
                 
             </div>
@@ -493,7 +556,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://versionofpolaris.github.io/archives/4a17b156.html">http://versionofpolaris.github.io/archives/4a17b156.html</a>
+                    <a href="http://versionofpolaris.github.io/archives/f2621c10.html">http://versionofpolaris.github.io/archives/f2621c10.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -530,7 +593,15 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">深度学习</span>
+                                </a>
+                            
+                                <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">
+                                    <span class="chip bg-color">目标检测</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -698,35 +769,90 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/archives/d5460cb9.html">
+                <a href="/archives/f2621c10.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="SRGAN">
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="SSD（二）IoU实现">
                         
-                        <span class="card-title">SRGAN</span>
+                        <span class="card-title">SSD（二）IoU实现</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            SRGAN论文阅读笔记
+                            锚框IoU实现
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-07-09
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-17
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/" class="post-category">
-                                    文献阅读
+                            <a href="/categories/%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/" class="post-category">
+                                    代码实践
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">深度学习</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">
+                        <span class="chip bg-color">目标检测</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/archives/30160142.html">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="SSD（一）VOC数据加载">
+                        
+                        <span class="card-title">SSD（一）VOC数据加载</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            VOC格式数据加载
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-15
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5/" class="post-category">
+                                    代码实践
                                 </a>
                             
                             
@@ -740,49 +866,11 @@
                         <span class="chip bg-color">深度学习</span>
                     </a>
                     
-                    <a href="/tags/%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/">
-                        <span class="chip bg-color">超分辨率</span>
+                    <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">
+                        <span class="chip bg-color">目标检测</span>
                     </a>
                     
                 </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
-            </div>
-            <div class="card">
-                <a href="/archives/4a17b156.html">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
-                        
-                        <span class="card-title">Hello World</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-07-09
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            Han Shichen
-                            
-                        </span>
-                    </div>
-                </div>
-
                 
             </div>
         </div>
@@ -947,6 +1035,13 @@
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
 
 
